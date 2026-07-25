@@ -22,9 +22,7 @@ class Promise implements PromiseInterface
     /**
      * Create a pending promise.
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * Resolve the promise with a successful response.

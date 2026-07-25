@@ -40,8 +40,9 @@ class DriverFactory
 
         if ($driverClass === null) {
             throw new HttpClientException(
-                sprintf('Unknown HTTP driver "%s". Available drivers: %s', 
-                    $driverName, 
+                sprintf(
+                    'Unknown HTTP driver "%s". Available drivers: %s',
+                    $driverName,
                     implode(', ', array_keys(self::DRIVER_MAP))
                 )
             );

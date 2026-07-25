@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Architect\HttpClient\Drivers;
 
 use Architect\HttpClient\Exception\NetworkException;
-use Architect\HttpClient\Exception\RequestException;
 use Architect\HttpClient\Promise;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;

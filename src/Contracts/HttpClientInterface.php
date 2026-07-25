@@ -6,7 +6,6 @@ namespace Architect\HttpClient\Contracts;
 
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * Extended HTTP client interface with async support and middleware management.

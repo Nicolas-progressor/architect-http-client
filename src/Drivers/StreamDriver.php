@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Architect\HttpClient\Drivers;
 
 use Architect\HttpClient\Exception\NetworkException;
-use Architect\HttpClient\Exception\RequestException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -147,7 +146,7 @@ class StreamDriver extends AbstractDriver
     ): ResponseInterface {
         // Use the same anonymous class as CurlDriver for now.
         // In production, we should inject a PSR-7 response factory.
-        return new class($body, $statusCode, $headers) implements ResponseInterface {
+        return new class ($body, $statusCode, $headers) implements ResponseInterface {
             // ... same implementation as in CurlDriver
             // For brevity, we'll duplicate the code (should be refactored).
             private string $body;
@@ -161,69 +160,140 @@ class StreamDriver extends AbstractDriver
                 $this->headers = $headers;
             }
 
-            public function getProtocolVersion(): string { return '1.1'; }
-            public function withProtocolVersion($version): self { return $this; }
-            public function getHeaders(): array { return $this->headers; }
-            public function hasHeader($name): bool { return isset($this->headers[$name]); }
-            public function getHeader($name): array { return $this->headers[$name] ?? []; }
-            public function getHeaderLine($name): string { return implode(', ', $this->getHeader($name)); }
-            public function withHeader($name, $value): self {
+            public function getProtocolVersion(): string
+            {
+                return '1.1';
+            }
+            public function withProtocolVersion($version): self
+            {
+                return $this;
+            }
+            public function getHeaders(): array
+            {
+                return $this->headers;
+            }
+            public function hasHeader($name): bool
+            {
+                return isset($this->headers[$name]);
+            }
+            public function getHeader($name): array
+            {
+                return $this->headers[$name] ?? [];
+            }
+            public function getHeaderLine($name): string
+            {
+                return implode(', ', $this->getHeader($name));
+            }
+            public function withHeader($name, $value): self
+            {
                 $clone = clone $this;
                 $clone->headers[$name] = (array) $value;
                 return $clone;
             }
-            public function withAddedHeader($name, $value): self {
+            public function withAddedHeader($name, $value): self
+            {
                 $clone = clone $this;
                 $clone->headers[$name] = array_merge($clone->headers[$name] ?? [], (array) $value);
                 return $clone;
             }
-            public function withoutHeader($name): self {
+            public function withoutHeader($name): self
+            {
                 $clone = clone $this;
                 unset($clone->headers[$name]);
                 return $clone;
             }
-            public function getBody(): \Psr\Http\Message\StreamInterface {
-                return new class($this->body) implements \Psr\Http\Message\StreamInterface {
+            public function getBody(): \Psr\Http\Message\StreamInterface
+            {
+                return new class ($this->body) implements \Psr\Http\Message\StreamInterface {
                     private string $content;
                     private int $position = 0;
-                    public function __construct(string $content) { $this->content = $content; }
-                    public function __toString(): string { return $this->content; }
+                    public function __construct(string $content)
+                    {
+                        $this->content = $content;
+                    }
+                    public function __toString(): string
+                    {
+                        return $this->content;
+                    }
                     public function close(): void {}
-                    public function detach() { return null; }
-                    public function getSize(): ?int { return strlen($this->content); }
-                    public function tell(): int { return $this->position; }
-                    public function eof(): bool { return $this->position >= strlen($this->content); }
-                    public function isSeekable(): bool { return true; }
-                    public function seek($offset, $whence = SEEK_SET): void { $this->position = $offset; }
-                    public function rewind(): void { $this->position = 0; }
-                    public function isWritable(): bool { return false; }
-                    public function write($string): int { return 0; }
-                    public function isReadable(): bool { return true; }
-                    public function read($length): string {
+                    public function detach()
+                    {
+                        return null;
+                    }
+                    public function getSize(): ?int
+                    {
+                        return strlen($this->content);
+                    }
+                    public function tell(): int
+                    {
+                        return $this->position;
+                    }
+                    public function eof(): bool
+                    {
+                        return $this->position >= strlen($this->content);
+                    }
+                    public function isSeekable(): bool
+                    {
+                        return true;
+                    }
+                    public function seek($offset, $whence = SEEK_SET): void
+                    {
+                        $this->position = $offset;
+                    }
+                    public function rewind(): void
+                    {
+                        $this->position = 0;
+                    }
+                    public function isWritable(): bool
+                    {
+                        return false;
+                    }
+                    public function write($string): int
+                    {
+                        return 0;
+                    }
+                    public function isReadable(): bool
+                    {
+                        return true;
+                    }
+                    public function read($length): string
+                    {
                         $result = substr($this->content, $this->position, $length);
                         $this->position += strlen($result);
                         return $result;
                     }
-                    public function getContents(): string {
+                    public function getContents(): string
+                    {
                         $result = substr($this->content, $this->position);
                         $this->position = strlen($this->content);
                         return $result;
                     }
-                    public function getMetadata($key = null) { return null; }
+                    public function getMetadata($key = null)
+                    {
+                        return null;
+                    }
                 };
             }
-            public function withBody(\Psr\Http\Message\StreamInterface $body): self {
+            public function withBody(\Psr\Http\Message\StreamInterface $body): self
+            {
                 $clone = clone $this;
                 $clone->body = (string) $body;
                 return $clone;
             }
-            public function getStatusCode(): int { return $this->statusCode; }
-            public function withStatus($code, $reasonPhrase = ''): self {
+            public function getStatusCode(): int
+            {
+                return $this->statusCode;
+            }
+            public function withStatus($code, $reasonPhrase = ''): self
+            {
                 $clone = clone $this;
                 $clone->statusCode = $code;
                 return $clone;
             }
-            public function getReasonPhrase(): string { return ''; }
+            public function getReasonPhrase(): string
+            {
+                return '';
+            }
         };
     }
 }

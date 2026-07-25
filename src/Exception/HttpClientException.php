@@ -9,6 +9,4 @@ use Psr\Http\Client\ClientExceptionInterface;
 /**
  * Base exception for HTTP client errors.
  */
-class HttpClientException extends \RuntimeException implements ClientExceptionInterface
-{
-}
+class HttpClientException extends \RuntimeException implements ClientExceptionInterface {}

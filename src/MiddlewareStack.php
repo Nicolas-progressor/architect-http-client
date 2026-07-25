@@ -46,7 +46,7 @@ class MiddlewareStack
     {
         $this->middlewares = array_filter(
             $this->middlewares,
-            fn ($middleware) => !$middleware instanceof $className
+            fn($middleware) => !$middleware instanceof $className
         );
     }
 

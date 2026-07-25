@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Architect\HttpClient\Drivers;
 
 use Architect\HttpClient\Exception\NetworkException;
-use Architect\HttpClient\Exception\RequestException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -138,7 +137,7 @@ class CurlDriver extends AbstractDriver
         // We'll use the Architect's Response class if available.
         // For now, we'll create a simple implementation.
         // This is a temporary placeholder; should be replaced with proper PSR-7.
-        return new class($body, $statusCode, $headers) implements ResponseInterface {
+        return new class ($body, $statusCode, $headers) implements ResponseInterface {
             private string $body;
             private int $statusCode;
             private array $headers;
@@ -204,7 +203,7 @@ class CurlDriver extends AbstractDriver
             public function getBody(): \Psr\Http\Message\StreamInterface
             {
                 // Simple stream implementation
-                return new class($this->body) implements \Psr\Http\Message\StreamInterface {
+                return new class ($this->body) implements \Psr\Http\Message\StreamInterface {
                     private string $content;
                     private int $position = 0;
 
@@ -219,16 +218,46 @@ class CurlDriver extends AbstractDriver
                     }
 
                     public function close(): void {}
-                    public function detach() { return null; }
-                    public function getSize(): ?int { return strlen($this->content); }
-                    public function tell(): int { return $this->position; }
-                    public function eof(): bool { return $this->position >= strlen($this->content); }
-                    public function isSeekable(): bool { return true; }
-                    public function seek($offset, $whence = SEEK_SET): void { $this->position = $offset; }
-                    public function rewind(): void { $this->position = 0; }
-                    public function isWritable(): bool { return false; }
-                    public function write($string): int { return 0; }
-                    public function isReadable(): bool { return true; }
+                    public function detach()
+                    {
+                        return null;
+                    }
+                    public function getSize(): ?int
+                    {
+                        return strlen($this->content);
+                    }
+                    public function tell(): int
+                    {
+                        return $this->position;
+                    }
+                    public function eof(): bool
+                    {
+                        return $this->position >= strlen($this->content);
+                    }
+                    public function isSeekable(): bool
+                    {
+                        return true;
+                    }
+                    public function seek($offset, $whence = SEEK_SET): void
+                    {
+                        $this->position = $offset;
+                    }
+                    public function rewind(): void
+                    {
+                        $this->position = 0;
+                    }
+                    public function isWritable(): bool
+                    {
+                        return false;
+                    }
+                    public function write($string): int
+                    {
+                        return 0;
+                    }
+                    public function isReadable(): bool
+                    {
+                        return true;
+                    }
                     public function read($length): string
                     {
                         $result = substr($this->content, $this->position, $length);
@@ -241,7 +270,10 @@ class CurlDriver extends AbstractDriver
                         $this->position = strlen($this->content);
                         return $result;
                     }
-                    public function getMetadata($key = null) { return null; }
+                    public function getMetadata($key = null)
+                    {
+                        return null;
+                    }
                 };
             }
 
