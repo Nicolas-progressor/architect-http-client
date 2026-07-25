@@ -14,7 +14,7 @@ use Psr\Http\Message\ResponseInterface;
  */
 class CurlMultiDriver extends CurlDriver
 {
-    /** @var resource|null */
+    /** @var \CurlMultiHandle|resource|null */
     private $multiHandle = null;
 
     /** @var array<int, array{request: RequestInterface, promise: Promise, handle: resource}> */

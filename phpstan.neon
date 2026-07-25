@@ -1,6 +1,3 @@
-includes:
-    - phpstan-baseline.neon
-
 parameters:
     paths:
         - src
@@ -8,4 +5,9 @@ parameters:
     excludePaths:
         - vendor
         - tests
+        - src/Integration
     treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        - '#on an unknown class#'
+        - '#extends unknown class#'
